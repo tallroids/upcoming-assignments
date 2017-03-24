@@ -1,0 +1,73 @@
+<div id="whatIf">
+  <style>
+    #whatIf {
+      font-family: 'Open Sans', sans-serif;
+    }
+    
+    #whatIf div {
+      position: fixed;
+      top: 30px;
+      width: 600px;
+      max-height: 600px;
+      height: 600px;
+      border: solid #333 2px;
+      border-radius: 4px;
+      padding: 20px;
+      overflow-y: auto;
+      transform: translate(-50%);
+      left: 50%;
+      top: 60px;
+    }
+    
+    #whatIf table {
+      border: solid #888 2px;
+      width: 100%;
+      border-radius: 2px;
+    }
+    
+    #whatIf .value {
+      text-align: right;
+      position: relative;
+      right: 16%;
+    }
+    
+    #whatIf input {
+      width: 40px;
+      border: solid #888 1px;
+      border-radius: 2px;
+    }
+    
+    #whatIf tr:nth-child(even) {
+      background: #f1f5f9;
+    }
+    
+    #whatIf th {
+      background: #def;
+    }
+    
+    #whatIf h1 {
+      margin: 0 0 10px 0;
+      color: #333;
+    }
+
+  </style>
+  <h1>What If?</h1>
+  <table>
+    <tr>
+      <th>Grade Item</th>
+      <th>Grade</th>
+    </tr>
+    <tr>
+      <td>Test</td>
+      <td class="value">10/10</td>
+    </tr>
+    <tr>
+      <td>Test</td>
+      <td class="value"><input type="text"> / 10</td>
+    </tr>
+    <tr>
+      <th>Total</th>
+      <th>10/10</th>
+    </tr>
+  </table>
+</div>
