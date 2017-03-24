@@ -1,1 +1,12 @@
-What If?
+# What If?
+
+This is a chrome extension that adds a "What If?" calculator to brightspace's gradebook.
+
+## Installation:
+1. Download the zip and extract, or clone the repository somewhere the files will be undisturbed
+2. Open Chrome, and in the menu go to "More Tools > Extensions"
+3. Click Developer Mode at the top right of the Extensions page if it is not enabled
+4. Select "Load unpacked extension" and select the folder that you just extracted
+
+## Use:
+Open the gradebook for a course, and click on the "What If?" button that is created in the top right of the page. This will open the what if calculator
