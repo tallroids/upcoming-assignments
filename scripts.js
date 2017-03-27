@@ -1,7 +1,8 @@
+/*eslint-env browser*/
 function whatIf() {
   var ou = top.location.search.split('=')[1];
   var grades, gradeobjs;
-  document.querySelector('.d2l-page-main').insertAdjacentHTML('beforeend', "<div id='whatIf'> <style> #whatIf { box-shadow: black 0 0 10px; background: #fff; position: fixed; top: 30px; width: 600px; max-height: 600px; height: 600px; border-radius: 4px; padding: 20px; overflow-y: auto; transform: translate(-50%); left: 50%; top: 60px; } #whatIf table {width: 100%} #whatIf td, #whatIf th {padding: 3px 10px; font-size: 1.3em;} #whatIf table tr { border: solid #aaa; border-width: 1px 0px 1px; width: 100%; } #whatIf .value { text-align: right; position: relative; right: 14%; } #whatIf input {      width: 40px; border: solid #888 1px; border-radius: 2px; } #whatIf tr:nth-child(even) { background: #f1f5f9; } #whatIf th { background: #def; } #whatIf h1 { margin: 0 0 10px 0; font-size:1.5em; color: #333; } .extra{color: #5c893a;} #close{position: absolute; top: 1em; right: 1em } #whatIf input {text-align: right}</style>  <h1>What If?</h1> <table> <tr> <th>Grade Item</th> <th>Grade</th> </tr> <tr id='total'> <th>Total</th> <th><span id='num' ></span>/<span id='den'></span> | <span id='perc'></span>% | <span id='grade'></span></th> </tr> </table> <a href='#' onclick='closeWhatIf()' id='close'>✕</a> </div>");
+  document.getElementById('whatIf').style = "";
 
   var gradeobjxhr = new XMLHttpRequest();
   gradeobjxhr.open("GET", "/d2l/api/le/1.15/" + ou + "/grades/");
@@ -31,9 +32,9 @@ function whatIf() {
               value = "<input class ='newGrade' type='text' onKeyUp='updateGrade()'>"
             }
             if (obj.IsBonus === false) {
-              document.querySelector('#total').insertAdjacentHTML('beforebegin', "<tr> <td>" + obj.Name + "</td> <td class='value'>" + value + " / " + obj.MaxPoints + "</td> </tr>");
+              document.querySelector('#whatIf tbody').insertAdjacentHTML('beforeend', "<tr> <td>" + obj.Name + "</td> <td class='value'>" + value + " / " + obj.MaxPoints + "</td> </tr>");
             } else {
-              document.querySelector('#total').insertAdjacentHTML('beforebegin', "<tr> <td>" + obj.Name + "</td> <td class='value extra'>" + value + " / " + obj.MaxPoints + "</td> </tr>");
+              document.querySelector('#whatIf tbody').insertAdjacentHTML('beforeend', "<tr> <td>" + obj.Name + "</td> <td class='value extra'>" + value + " / " + obj.MaxPoints + "</td> </tr>");
             }
           })
           localStorage.setItem('num', num);
