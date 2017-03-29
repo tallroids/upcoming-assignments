@@ -63,7 +63,7 @@ function weightedOps(grades, ou) {
           gradeobj.FinalWeight = (gradeobj.Weight) * (catg.Weight / 100);
           if (gradeobj.gValueObj != null) {
             gradeobj.Earned = gradeobj.gValueObj.PointsNumerator;
-            value = gradeobj.Earned;
+            value = Math.round(gradeobj.Earned * 100) / 100;
             num += (gradeobj.Earned / gradeobj.MaxPoints) * gradeobj.FinalWeight;
             if (gradeobj.IsBonus === false) {
               den += gradeobj.FinalWeight;
@@ -83,7 +83,7 @@ function weightedOps(grades, ou) {
       localStorage.setItem('den', den);
       document.getElementById('num').innerText = Math.round(num * 100) / 100;
       document.getElementById('den').innerText = Math.round(den * 100) / 100;
-      document.getElementById('perc').innerText = Math.round(num / den * 100);
+      document.getElementById('perc').innerText = Math.round(num / den * 10000) / 100;
       document.getElementById('grade').innerText = getGrade((num / den));
     }
   }
@@ -119,9 +119,9 @@ function pointsOps(grades, ou) {
       })
       localStorage.setItem('num', num);
       localStorage.setItem('den', den);
-      document.getElementById('num').innerText = num;
-      document.getElementById('den').innerText = den;
-      document.getElementById('perc').innerText = Math.round(num / den * 100);
+      document.getElementById('num').innerText = Math.round(num * 100) / 100;
+      document.getElementById('den').innerText = Math.round(den * 100) / 100;
+      document.getElementById('perc').innerText = Math.round(num / den * 10000) / 100;
       document.getElementById('grade').innerText = getGrade((num / den));
     }
   }
@@ -159,7 +159,7 @@ function updateGrade() {
     });
     document.getElementById('num').innerHTML = Math.round(num * 100) / 100;
     document.getElementById('den').innerHTML = Math.round(den * 100) / 100;
-    document.getElementById('perc').innerText = Math.round(num / den * 100);
+    document.getElementById('perc').innerText = Math.round(num / den * 10000) / 100;
     document.getElementById('grade').innerText = getGrade((num / den));
   }
 }
