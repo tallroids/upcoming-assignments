@@ -46,6 +46,7 @@ function getGradeObjs(setup, ou) {
 }
 
 function weightedOps(grades, ou) {
+  document.getElementById('whatIf').classList.add('weighted');
   var catxhr = new XMLHttpRequest();
   catxhr.open("GET", "/d2l/api/le/1.15/" + ou + "/grades/categories/");
   catxhr.onload = function () {
@@ -55,21 +56,23 @@ function weightedOps(grades, ou) {
         catg.Grades.forEach(function (gradeobj) {
           /* Get the earned value and insert */
           var value;
-          gradeobj.Earned = grades.filter(function (grade) {
+          gradeobj.gValueObj = grades.filter(function (grade) {
             return grade.GradeObjectIdentifier == gradeobj.Id;
           })[0];
           /* Popluate Table */
-          gradeobj.wgtAchieved = (gradeobj.Earned / gradeobj.MaxPoints) * (gradeobj.Weight) * (catg.Weight / 100);
-          if (gradeobj.Earned != null) {
-            gradeobj.Earned = gradeobj.Earned.PointsNumerator;
+          gradeobj.FinalWeight = (gradeobj.Weight) * (catg.Weight / 100);
+          if (gradeobj.gValueObj != null) {
+            gradeobj.Earned = gradeobj.gValueObj.PointsNumerator;
             value = gradeobj.Earned;
-            num += gradeobj.wgtAchieved;
+            num += (gradeobj.Earned / gradeobj.MaxPoints) * gradeobj.FinalWeight;
+            if (gradeobj.IsBonus === false) {
+              den += gradeobj.FinalWeight;
+            }
           } else {
-            value = "<input class ='newGrade' type='text' onKeyUp='updateGrade()'>"
+            value = "<input class ='newGrade' type='text' onKeyUp='updateGrade()' " + "data-weight='" + gradeobj.FinalWeight + "'>"
           }
           if (gradeobj.IsBonus === false) {
             document.querySelector('#whatIf tbody').insertAdjacentHTML('beforeend', "<tr> <td>" + gradeobj.Name + "</td> <td class='value'>" + value + " / " + gradeobj.MaxPoints + "</td> </tr>");
-            den += (gradeobj.Weight * catg.Weight / 100);
           } else {
             document.querySelector('#whatIf tbody').insertAdjacentHTML('beforeend', "<tr> <td>" + gradeobj.Name + "</td> <td class='value extra'>" + value + " / " + gradeobj.MaxPoints + "</td> </tr>");
           }
@@ -82,7 +85,6 @@ function weightedOps(grades, ou) {
       document.getElementById('den').innerText = Math.round(den * 100) / 100;
       document.getElementById('perc').innerText = Math.round(num / den * 100);
       document.getElementById('grade').innerText = getGrade((num / den));
-      document.getElementById('close').insertAdjacentHTML('afterend', '<p><em>Attention!</em> Weighted grades schemes are not yet supported</p>')
     }
   }
   catxhr.send();
@@ -126,23 +128,40 @@ function pointsOps(grades, ou) {
   gradeobjxhr.send();
 }
 
-function closeWhatIf() {
-  document.getElementById('whatIf').style = "display:none";
+function calcWeighted() {
+  var num = Number(localStorage.getItem('num'));
+  var den = Number(localStorage.getItem('den'));
+  document.querySelectorAll('.newGrade').forEach(function (input) {
+    if (!input.parentNode.classList.contains('extra') && input.value != "") {
+      den += Number(input.getAttribute('data-weight'));
+    }
+    if (input.value != "") {
+      num += (Number(input.value) / Number(input.parentNode.innerText.split('/')[1]) * Number(input.getAttribute('data-weight')));
+    }
+  });
+  document.getElementById('num').innerHTML = Math.round(num * 100) / 100;
+  document.getElementById('den').innerHTML = Math.round(den * 100) / 100;
+  document.getElementById('perc').innerText = Math.round(num / den * 100);
+  document.getElementById('grade').innerText = getGrade((num / den));
 }
 
 function updateGrade() {
-  var num = Number(localStorage.getItem('num'));
-  var den = Number(localStorage.getItem('den'));
-  document.querySelectorAll('.newGrade').forEach(function (value) {
-    if (!value.parentNode.classList.contains('extra') && value.value != "") {
-      den += Number(value.parentNode.innerText.split('/')[1]);
-    }
-    num += Number(value.value);
-  });
-  document.querySelector('#num').innerHTML = Math.round(num * 100) / 100;
-  document.querySelector('#den').innerHTML = Math.round(den * 100) / 100;
-  document.getElementById('perc').innerText = Math.round(num / den * 100);
-  document.getElementById('grade').innerText = getGrade((num / den));
+  if (document.getElementById('whatIf').classList.contains('weighted')) {
+    calcWeighted();
+  } else {
+    var num = Number(localStorage.getItem('num'));
+    var den = Number(localStorage.getItem('den'));
+    document.querySelectorAll('.newGrade').forEach(function (value) {
+      if (!value.parentNode.classList.contains('extra') && value.value != "") {
+        den += Number(value.parentNode.innerText.split('/')[1]);
+      }
+      num += Number(value.value);
+    });
+    document.getElementById('num').innerHTML = Math.round(num * 100) / 100;
+    document.getElementById('den').innerHTML = Math.round(den * 100) / 100;
+    document.getElementById('perc').innerText = Math.round(num / den * 100);
+    document.getElementById('grade').innerText = getGrade((num / den));
+  }
 }
 
 function getGrade(perc) {
@@ -169,4 +188,8 @@ function getGrade(perc) {
   } else if (perc >= .60) {
     return "D-";
   } else return "F"
+}
+
+function closeWhatIf() {
+  document.getElementById('whatIf').style = "display:none";
 }
