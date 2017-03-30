@@ -10,7 +10,8 @@
   },
   "content_scripts": [{
     "js": ["whatIf.js"],
-    "matches": ["https://byui.brightspace.com/d2l/lms/grades/my_grades/*"]
+    "matches": ["https://byui.brightspace.com/d2l/lms/grades/my_grades/*",
+               "https://pathway.brightspace.com/d2l/lms/grades/my_grades/*"]
   }],
   "web_accessible_resources": ["scripts.js", "window.html"],
   "background": {
