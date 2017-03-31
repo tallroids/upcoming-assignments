@@ -44,7 +44,12 @@ classesxhr.onload = function () {
       if (itemsxhr.status == 200) {
         items = JSON.parse(itemsxhr.response);
         items.Objects.forEach(function (item) {
-          var itemRow = "<th><a href=" + item.ItemUrl + ">" + item.ItemName + "</a></th><td class='course'>" + getCourse(item.OrgUnitId, filtered) + "</td><td>" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td>";
+          var itemClass = "";
+          if (Date.parse(item.DueDate) - currDate < 0) {
+            itemClass = "late";
+            console.log("late")
+          }
+          var itemRow = "<tr><th><a href=" + item.ItemUrl + ">" + item.ItemName + "</a></th><td>" + getCourse(item.OrgUnitId, filtered) + "</td><td class=" + itemClass + ">" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td></tr>";
           document.getElementById('upcomingTbody').insertAdjacentHTML('beforeend', itemRow)
         });
         document.getElementById('upcoming').insertAdjacentHTML('beforeend', "<p>*Assignments more that one week overdue are ommited.</p>")
