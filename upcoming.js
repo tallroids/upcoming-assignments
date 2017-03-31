@@ -13,6 +13,14 @@ function getCourse(courseId, courses) {
   })[0].Name
 }
 
+function getCourseIds(courses) {
+  var string = "";
+  courses.forEach(function (item) {
+    string += item.Id + ",";
+  })
+  return string;
+}
+
 classesxhr.open("GET", "/d2l/api/lp/1.9/enrollments/myenrollments/?isActive=true&canAccess=true&orgUnitTypeId=3&startDateTime=" + startDate.toISOString() + "&endDateTime=" + endDate.toISOString());
 classesxhr.onload = function () {
   if (classesxhr.status == 200) {
@@ -29,7 +37,7 @@ classesxhr.onload = function () {
     console.log(filtered);
     var items;
     var itemsxhr = new XMLHttpRequest();
-    itemsxhr.open("GET", "/d2l/api/le/1.18/content/myItems/due/?COMPLETION_T=1&orgUnitIdsCSV=171694");
+    itemsxhr.open("GET", "/d2l/api/le/1.18/content/myItems/due/?COMPLETION_T=1&orgUnitIdsCSV=" + getCourseIds(filtered));
     itemsxhr.onload = function (e) {
       if (itemsxhr.status == 200) {
         items = JSON.parse(itemsxhr.response);
