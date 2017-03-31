@@ -7,6 +7,9 @@ startDate.setDate(startDate.getDate() - 120);
 var endDate = new Date(currDate);
 endDate.setDate(endDate.getDate() + 120);
 
+var itemsStartDate = new Date(currDate);
+itemsStartDate.setDate(itemsStartDate.getDate() - 7);
+
 function getCourse(courseId, courses) {
   return courses.filter(function (course) {
     return course.Id == courseId;
@@ -36,7 +39,7 @@ classesxhr.onload = function () {
     });
     var items;
     var itemsxhr = new XMLHttpRequest();
-    itemsxhr.open("GET", "/d2l/api/le/1.18/content/myItems/due/?completion=3&orgUnitIdsCSV=" + getCourseIds(filtered));
+    itemsxhr.open("GET", "/d2l/api/le/1.18/content/myItems/due/?completion=3&orgUnitIdsCSV=" + getCourseIds(filtered) + "&startDateTime=" + itemsStartDate.toISOString());
     itemsxhr.onload = function (e) {
       if (itemsxhr.status == 200) {
         items = JSON.parse(itemsxhr.response);
@@ -44,6 +47,7 @@ classesxhr.onload = function () {
           var itemRow = "<th><a href=" + item.ItemUrl + ">" + item.ItemName + "</a></th><td class='course'>" + getCourse(item.OrgUnitId, filtered) + "</td><td>" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td>";
           document.getElementById('upcomingTbody').insertAdjacentHTML('beforeend', itemRow)
         });
+        document.getElementById('upcoming').insertAdjacentHTML('beforeend', "<p>*Assignments more that one week overdue are ommited.</p>")
       } else {
         console.error(e);
       }
