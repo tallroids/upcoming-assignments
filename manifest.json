@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
 
-  "name": "What if Calculator",
-  "description": "This extension ads a what-if calculator to the Brightspace gradebook for students",
-  "version": "1.0",
+  "name": "I-Learn Tools",
+  "description": "This extension ads an upcoming assignments widget to the I-Learn homescreen, and a what-if calculator to the gradebook for students",
+  "version": "1.1",
 
   "browser_action": {
     "default_icon": "icon.png"

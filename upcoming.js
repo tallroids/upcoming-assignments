@@ -34,17 +34,15 @@ classesxhr.onload = function () {
         Id: value.OrgUnit.Id
       }
     });
-    console.log(filtered);
     var items;
     var itemsxhr = new XMLHttpRequest();
-    itemsxhr.open("GET", "/d2l/api/le/1.18/content/myItems/due/?COMPLETION_T=1&orgUnitIdsCSV=" + getCourseIds(filtered));
+    itemsxhr.open("GET", "/d2l/api/le/1.18/content/myItems/due/?completion=3&orgUnitIdsCSV=" + getCourseIds(filtered));
     itemsxhr.onload = function (e) {
       if (itemsxhr.status == 200) {
         items = JSON.parse(itemsxhr.response);
-        console.log(items)
         items.Objects.forEach(function (item) {
-          var itemRow = "<th><a href=" + item.ItemUrl + ">" + item.ItemName + "</a></th><td class='name'>" + getCourse(item.OrgUnitId, filtered) + "</td><td>" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td>";
-          document.getElementById('upcomingTable').insertAdjacentHTML('afterbegin', itemRow)
+          var itemRow = "<th><a href=" + item.ItemUrl + ">" + item.ItemName + "</a></th><td class='course'>" + getCourse(item.OrgUnitId, filtered) + "</td><td>" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td>";
+          document.getElementById('upcomingTbody').insertAdjacentHTML('beforeend', itemRow)
         });
       } else {
         console.error(e);

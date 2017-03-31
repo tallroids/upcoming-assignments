@@ -1,6 +1,16 @@
 <style>
+  #upcoming {
+    box-shadow: 0px 2px 2px 0px #e7e7e2;
+    border-radius: 3px;
+  }
+  
+  #upcomingTable {
+    table-layout: fixed;
+  }
+  
   #upcoming th {
     text-align: left;
+    width: calc(40% - 20px);
   }
   
   #upcoming tr:nth-child(odd) {
@@ -21,17 +31,28 @@
   
   #upcoming .myHeading a {
     color: #fff;
+    font-size: .96em;
   }
   
   #upcoming th,
   #upcoming td {
+    display: inline-block;
     padding: 3px 10px;
-    font-size: 1.2em;
+    font-size: 1.1em;
   }
   
   #upcoming td {
     white-space: nowrap;
     text-overflow: ellipsis;
+    overflow: hidden;
+    width: calc(30% - 20px);
+  }
+  
+  #upcomingTbody {
+    max-height: 450px;
+    overflow-y: auto;
+    display: block;
+    width: 100%;
   }
 
 </style>
@@ -39,7 +60,7 @@
   <h2 class="vui-heading-2 myHeading d2l-heading d2l-widget-header">
     <a href="https://byui.brightspace.com/d2l/le/calendar/6606">Upcoming Assignments</a>
   </h2>
-  <table>
-    <tbody id="upcomingTable"></tbody>
+  <table id="upcomingTable">
+    <tbody id="upcomingTbody"></tbody>
   </table>
 </div>
