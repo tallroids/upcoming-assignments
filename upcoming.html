@@ -2,23 +2,7 @@
   #upcoming {
     box-shadow: 0px 2px 2px 0px #e7e7e2;
     border-radius: 3px;
-  }
-  
-  #upcomingTable {
-    table-layout: fixed;
-  }
-  
-  #upcoming th {
-    text-align: left;
-    width: calc(40% - 20px);
-  }
-  
-  #upcoming tr:nth-child(odd) {
-    background: #eee;
-  }
-  
-  .d2l-widget table {
-    width: 100%;
+    background: #fff;
   }
   
   #upcoming .myHeading {
@@ -32,6 +16,27 @@
   #upcoming .myHeading a {
     color: #fff;
     font-size: .96em;
+  }
+  
+  #upcomingTable {
+    table-layout: fixed;
+    width: 100%;
+  }
+  
+  #upcomingTbody {
+    max-height: 450px;
+    overflow-y: auto;
+    display: block;
+    width: 100%;
+  }
+  
+  #upcoming th {
+    text-align: left;
+    width: calc(40% - 20px);
+  }
+  
+  #upcoming tr {
+    border-bottom: 1px solid #eaeaea;
   }
   
   #upcoming th,
@@ -48,14 +53,16 @@
     width: calc(30% - 20px);
   }
   
-  #upcomingTbody {
-    max-height: 450px;
-    overflow-y: auto;
-    display: block;
-    width: 100%;
+  #upcoming.singleCourse th {
+    width: calc(70% - 20px);
+  }
+  
+  #upcoming.singleCourse td {
+    width: calc(30% - 20px);
   }
   
   #upcoming p {
+    font-size: .8em;
     margin: 0;
     padding: 2px 10px 3px;
     color: #888;
