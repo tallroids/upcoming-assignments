@@ -43,7 +43,6 @@ classesxhr.onload = function () {
     itemsxhr.onload = function (e) {
       if (itemsxhr.status == 200) {
         items = JSON.parse(itemsxhr.response);
-        console.log(items)
         items.Objects.forEach(function (item) {
           var itemClass = "";
           if (Date.parse(item.DueDate) - currDate < 0) {
@@ -55,7 +54,7 @@ classesxhr.onload = function () {
           var itemRow = "<tr><th><a href=" + item.ItemUrl + ">" + item.ItemName + "</a></th><td>" + getCourse(item.OrgUnitId, filtered) + "</td><td class=" + itemClass + ">" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td></tr>";
           document.getElementById('upcomingTbody').insertAdjacentHTML('beforeend', itemRow)
         });
-        document.getElementById('upcoming').insertAdjacentHTML('beforeend', "<p>*Assignments more that one week overdue are ommited.</p>")
+        document.getElementById('upcoming').insertAdjacentHTML('beforeend', "<p>*Assignments more that one week overdue are ommited. Quizzes with unlimited attempts will not disappear after comletion</p>")
       } else {
         console.error(e);
       }
