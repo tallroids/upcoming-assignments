@@ -12,7 +12,6 @@ itemsStartDate.setDate(itemsStartDate.getDate() - 7);
 
 if (typeof (ou) != 'undefined') {
   if (ou != "6606") {
-    console.log(ou)
     var cclass = [{
       Id: ou
     }];
@@ -76,7 +75,6 @@ function getEnrollments() {
   classesxhr.onload = function () {
     if (classesxhr.status == 200) {
       classes = JSON.parse(classesxhr.response);
-      console.log(classes)
       var filtered = classes.Items.filter(function (value) {
         return Date.parse(value.Access.EndDate) >= currDate
       });

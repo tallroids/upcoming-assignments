@@ -38,7 +38,7 @@ function getGradeObjs(setup, ou) {
       } else if (setup == "Points") {
         pointsOps(grades, ou);
       }
-      document.getElementById('close').insertAdjacentHTML('afterend', '<p>Please note that this calculation should be used for reference only, and the actual final calculated grade may vary slightly</p>')
+      document.getElementById('close').insertAdjacentHTML('afterend', '<p>Please note the actual final calculated grade may vary slightly</p>')
 
     }
   }
@@ -47,6 +47,7 @@ function getGradeObjs(setup, ou) {
 
 function weightedOps(grades, ou) {
   document.getElementById('whatIf').classList.add('weighted');
+  document.getElementById('close').insertAdjacentHTML('beforebegin', "<p class='alert'>Attention! Weighted gradebooks are still under development, and calculations should not be trusted</p>");
   var catxhr = new XMLHttpRequest();
   catxhr.open("GET", "/d2l/api/le/1.15/" + ou + "/grades/categories/");
   catxhr.onload = function () {
@@ -78,7 +79,6 @@ function weightedOps(grades, ou) {
           }
         });
       });
-      console.log(catgs);
       localStorage.setItem('num', num);
       localStorage.setItem('den', den);
       document.getElementById('num').innerText = Math.round(num * 100) / 100;

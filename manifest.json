@@ -2,15 +2,15 @@
   "manifest_version": 2,
 
   "name": "I-Learn Tools",
-  "description": "Ads an upcoming assignments widget to the I-Learn homescreen, and a what-if calculator to the gradebook for students",
+  "description": "View upcoming assignments widget to the I-Learn homescreen, and use a what-if calculator in the gradebook.",
   "version": "1.1",
   "icons": {
+    "16": "icon-16.png",
+    "32": "icon-32.png",
     "128": "icon-128.png"
   },
   "browser_action": {
-    "default_icon": "icon-32.png",
-    "default_icon": "icon-16.png",
-    "default_icon": "icon-128.png"
+    "default_icon": "icon-32.png"
   },
   "content_scripts": [{
     "js": ["whatIf.js"],
