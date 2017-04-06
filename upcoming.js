@@ -24,7 +24,6 @@ if (typeof (ou) != 'undefined') {
   getEnrollments();
 }
 
-
 function getCourse(courseId, courses) {
   var name = courses.filter(function (course) {
     return course.Id == courseId;
@@ -53,11 +52,11 @@ function getItems(classes) {
       items = JSON.parse(itemsxhr.response);
       items.Objects.forEach(function (item) {
         var itemClass = "";
-        if (Date.parse(item.DueDate) - currDate < 0) {
-          itemClass = "late";
-        }
         if (item.DueDate === null) {
           item.DueDate = item.EndDate;
+        }
+        if (Date.parse(item.DueDate) - currDate < 0) {
+          itemClass = "late";
         }
         var itemRow = "<tr><th><a href=" + item.ItemUrl + " title='" + item.ItemName + "'>" + item.ItemName + "</a></th>" + getCourse(item.OrgUnitId, classes) + "<td class=" + itemClass + ">" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td></tr>";
         document.getElementById('upcomingTbody').insertAdjacentHTML('beforeend', itemRow)
@@ -68,10 +67,9 @@ function getItems(classes) {
   itemsxhr.send();
 }
 
-
 function getEnrollments() {
   var classesxhr = new XMLHttpRequest();
-  classesxhr.open("GET", "/d2l/api/lp/1.9/enrollments/myenrollments/?isActive=true&canAccess=true&orgUnitTypeId=3&startDateTime=" + startDate.toISOString() + "&endDateTime=" + endDate.toISOString());
+  classesxhr.open("GET", "/d2l/api/lp/1.9/enrollments/myenrollments/?canAccess=true&orgUnitTypeId=3&startDateTime=" + startDate.toISOString() + "&endDateTime=" + endDate.toISOString());
   classesxhr.onload = function () {
     if (classesxhr.status == 200) {
       classes = JSON.parse(classesxhr.response);

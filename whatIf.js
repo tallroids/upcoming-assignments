@@ -13,7 +13,7 @@ if (top.location.pathname.split('/')[4] == 'my_grades') {
   xhr.onload = function () {
     if (xhr.status == 200) {
       whatIfWindow = xhr.response;
-      document.querySelector('.d2l-page-main').insertAdjacentHTML('beforeend', whatIfWindow);
+      document.querySelector('#d2l_body').insertAdjacentHTML('beforeend', whatIfWindow);
     }
 
   }
@@ -27,7 +27,7 @@ if (top.location.pathname.split('/')[4] == 'my_grades') {
   (document.head || document.documentElement).appendChild(script);
 
 } else if (top.location.pathname.split('/')[2] == 'home') {
-  
+
   var upcomingUrl = chrome.extension.getURL('upcoming.html');
   var upcoming;
   xhr = new XMLHttpRequest();

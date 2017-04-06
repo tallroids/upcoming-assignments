@@ -1,130 +1,160 @@
-<div id="whatIf" style="display: none;">
-  <style>
-    #whatIf {
-      background-color: #fff;
-    }
-    
-    #whatIf {
-      position: absolute;
-      top: 10vh;
-      width: 400px;
-      min-width: 300px;
-      max-width: 90vw;
-      max-height: 80vh;
-      border-radius: 4px;
-      padding: 20px 20px 40px;
-      transform: translate(-50%);
-      left: 50%;
-      top: 60px;
-      resize: horizontal;
-      box-shadow: #333 0 0 10px;
-      overflow: hidden;
-    }
-    
-    #whatIf table {
-      border-collapse: collapse;
-      display: table;
-      width: 100%;
-    }
-    
-    #whatIf tr {
-      border: solid #888;
-      border-width: 0 0 1px;
-      margin: 0;
-    }
-    
-    #whatIf .value {
-      text-align: right;
-      padding: 0 30px 0 10px;
-      width: 150px;
-    }
-    
-    #whatIf input {
-      width: 40px;
-      border: solid #888 1px;
-      border-radius: 2px;
-      text-align: right;
-    }
-    
-    #whatIf input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    
-    #whatIf tr:nth-child(even) {
-      background: #f1f5f9;
-    }
-    
-    #whatIf thead,
-    #whatIf tfoot {
-      background: #def;
-      width: 100%;
-      display: table;
-      font-size: 1.5em;
-    }
-    
-    #whatIf th {
-      padding: 5px;
-    }
-    
-    #whatIf td {
-      font-size: 1.2em;
-      padding: 3px;
-    }
-    
-    .gradeCol {
-      width: 200px;
-    }
-    
-    #whatIf tbody {
-      display: block;
-      max-height: calc(80vh - 140px);
-      width: 100%;
-      overflow: auto;
-    }
-    
-    #whatIf tbody tr {
-      display: table;
-      width: 100%;
-    }
-    
-    #close {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      text-decoration: none;
-      color: #333;
-    }
-    
-    .extra {
-      color: #5c893a;
-    }
-    
-    #whatIf p {
-      margin: 2px 0 0 0;
-    }
-    
-    .alert {
-      color: #aa0000;
-    }
+<style>
+  #whatIf {
+    background-color: #fff;
+  }
+  
+  #whatIf {
+    position: absolute;
+    top: 10vh;
+    width: 400px;
+    min-width: 300px;
+    max-width: 90vw;
+    max-height: 80vh;
+    border-radius: 4px;
+    padding: 20px 20px 40px;
+    transform: translate(-50%);
+    left: 50%;
+    top: 60px;
+    resize: horizontal;
+    box-shadow: #333 0 0 10px;
+    overflow: hidden;
+  }
+  
+  #whatIf table {
+    border-collapse: collapse;
+    display: table;
+    width: 100%;
+  }
+  
+  #whatIf tr {
+    border: solid #ccc;
+    border-width: 0 0 1px;
+    margin: 0;
+  }
+  
+  #whatIf .value {
+    text-align: right;
+    padding: 0 30px 0 10px;
+    width: 150px;
+  }
+  
+  #whatIf input {
+    width: 40px;
+    border: solid #888 1px;
+    border-radius: 2px;
+    text-align: right;
+  }
+  
+  #whatIf input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  #whatIf tr:nth-child(even) {
+    background: #f1f5f9;
+  }
+  
+  #whatIf thead,
+  #whatIf tfoot {
+    background: #def;
+    width: 100%;
+    display: table;
+    font-size: 1.5em;
+  }
+  
+  #whatIf th {
+    padding: 5px;
+  }
+  
+  #whatIf td {
+    font-size: 1.2em;
+    padding: 3px;
+  }
+  
+  .gradeCol {
+    width: 200px;
+  }
+  
+  #whatIf tbody {
+    display: block;
+    max-height: calc(80vh - 140px);
+    width: 100%;
+    overflow: auto;
+  }
+  
+  #whatIf tbody tr {
+    display: table;
+    width: 100%;
+  }
+  
+  #close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .extra {
+    color: #5c893a;
+  }
+  
+  #whatIf p {
+    margin: 2px 0 0 0;
+  }
+  
+  .alert {
+    color: #aa0000;
+  }
+  
+  #overlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    margin: 0;
+    overflow-y: scroll;
+    z-index: 1000;
+    transition: .1s;
+  }
+  
+  #overlay.visible {
+    background: rgba(0, 0, 0, .3);
+  }
+  
+  #d2l_body.disabled {
+    overflow-y: hidden;
+    position: relative;
+    right: 8px;
+  }
+  
+  #overlay.hidden {
+    z-index: -100;
+    background: rgba(0, 0, 0, 0);
+  }
 
-  </style>
-  <h1 class="vui-heading-1">What If?</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Grade Item</th>
-        <th class="gradeCol">Grade</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-    <tfoot>
-      <tr>
-        <th>Total</th>
-        <th class="gradeCol"><span id='num'></span>/<span id='den'></span> | <span id='perc'></span>% | <span id='grade'></span></th>
-      </tr>
-    </tfoot>
-  </table>
-  <a href='#' onclick='closeWhatIf()' id='close'>✕</a>
+</style>
+<div id="overlay" class="hidden">
+  <div id="whatIf">
+    <h1 class="vui-heading-1">What If?</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Grade Item</th>
+          <th class="gradeCol">Grade</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>Total</th>
+          <th class="gradeCol"><span id='num'></span>/<span id='den'></span> | <span id='perc'></span>% | <span id='grade'></span></th>
+        </tr>
+      </tfoot>
+    </table>
+    <a href='#' onclick='closeWhatIf()' id='close'>✕</a>
+    <p>Please note the actual final calculated grade may vary slightly</p>
+  </div>
 </div>

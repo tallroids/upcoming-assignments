@@ -1,17 +1,19 @@
 /*eslint-env browser*/
+var ou = top.location.search.split('=')[1],
+  num = 0,
+  den = 0;
 
 function whatIf() {
+  document.getElementById('overlay').classList.toggle("hidden");
+  document.getElementById('overlay').classList.toggle("visible");
+  document.querySelector('body').classList.toggle('disabled');
   if (document.getElementById('grade').innerText == "") {
-    document.getElementById('whatIf').style = "";
     getSetup();
-  } else {
-    document.getElementById('whatIf').style = "";
   }
 }
 
 function getSetup() {
   var setup;
-  var ou = top.location.search.split('=')[1];
   var setupxhr = new XMLHttpRequest();
   setupxhr.open("GET", "/d2l/api/le/1.15/" + ou + "/grades/setup/");
   setupxhr.onload = function () {
@@ -23,8 +25,6 @@ function getSetup() {
   setupxhr.send();
 }
 
-var num = 0,
-  den = 0;
 
 function getGradeObjs(setup, ou) {
   var grades;
@@ -38,8 +38,6 @@ function getGradeObjs(setup, ou) {
       } else if (setup == "Points") {
         pointsOps(grades, ou);
       }
-      document.getElementById('close').insertAdjacentHTML('afterend', '<p>Please note the actual final calculated grade may vary slightly</p>')
-
     }
   }
   gradesxhr.send();
@@ -47,7 +45,7 @@ function getGradeObjs(setup, ou) {
 
 function weightedOps(grades, ou) {
   document.getElementById('whatIf').classList.add('weighted');
-  document.getElementById('close').insertAdjacentHTML('beforebegin', "<p class='alert'>Attention! Weighted gradebooks are still under development, and calculations should not be trusted</p>");
+  document.getElementById('close').insertAdjacentHTML('beforebegin', "<p class='alert'>Attention! Calculations for weighted gradebooks are still under development, and should not be trusted.</p>");
   var catxhr = new XMLHttpRequest();
   catxhr.open("GET", "/d2l/api/le/1.15/" + ou + "/grades/categories/");
   catxhr.onload = function () {
@@ -61,30 +59,23 @@ function weightedOps(grades, ou) {
             return grade.GradeObjectIdentifier == gradeobj.Id;
           })[0];
           /* Popluate Table */
-          gradeobj.FinalWeight = (gradeobj.Weight) * (catg.Weight / 100);
+          gradeobj.FinalWeight = (gradeobj.Weight) * (catg.Weight) / 100;
           if (gradeobj.gValueObj != null) {
             gradeobj.Earned = gradeobj.gValueObj.PointsNumerator;
             value = Math.round(gradeobj.Earned * 100) / 100;
-            num += (gradeobj.Earned / gradeobj.MaxPoints) * gradeobj.FinalWeight;
+            num += Math.round((gradeobj.Earned / gradeobj.MaxPoints) * 10) / 10 * gradeobj.FinalWeight;
             if (gradeobj.IsBonus === false) {
               den += gradeobj.FinalWeight;
             }
           } else {
-            value = "<input class ='newGrade' type='text' onKeyUp='updateGrade()' " + "data-weight='" + gradeobj.FinalWeight + "'>"
+            value = "<input class ='newGrade' type='number' onKeyUp='updateGrade()' " + "data-weight='" + gradeobj.FinalWeight + "'>"
           }
-          if (gradeobj.IsBonus === false) {
-            document.querySelector('#whatIf tbody').insertAdjacentHTML('beforeend', "<tr> <td>" + gradeobj.Name + "</td> <td class='value'>" + value + " / " + gradeobj.MaxPoints + "</td> </tr>");
-          } else {
-            document.querySelector('#whatIf tbody').insertAdjacentHTML('beforeend', "<tr> <td>" + gradeobj.Name + "</td> <td class='value extra'>" + value + " / " + gradeobj.MaxPoints + "</td> </tr>");
-          }
+          insertRows(gradeobj, value);
         });
       });
       localStorage.setItem('num', num);
       localStorage.setItem('den', den);
-      document.getElementById('num').innerText = Math.round(num * 100) / 100;
-      document.getElementById('den').innerText = Math.round(den * 100) / 100;
-      document.getElementById('perc').innerText = Math.round(num / den * 10000) / 100;
-      document.getElementById('grade').innerText = getGrade((num / den));
+      setGrade(num, den);
     }
   }
   catxhr.send();
@@ -109,28 +100,25 @@ function pointsOps(grades, ou) {
           }
           value = value.PointsNumerator;
         } else {
-          value = "<input class ='newGrade' type='text' onKeyUp='updateGrade()'>"
+          value = "<input class ='newGrade' type='number' onKeyUp='updateGrade()'>"
         }
-        if (obj.IsBonus === false) {
-          document.querySelector('#whatIf tbody').insertAdjacentHTML('beforeend', "<tr> <td>" + obj.Name + "</td> <td class='value'>" + value + " / " + obj.MaxPoints + "</td> </tr>");
-        } else {
-          document.querySelector('#whatIf tbody').insertAdjacentHTML('beforeend', "<tr> <td>" + obj.Name + "</td> <td class='value extra'>" + value + " / " + obj.MaxPoints + "</td> </tr>");
-        }
+        insertRows(obj, value);
       })
-      localStorage.setItem('num', num);
-      localStorage.setItem('den', den);
-      document.getElementById('num').innerText = Math.round(num * 100) / 100;
-      document.getElementById('den').innerText = Math.round(den * 100) / 100;
-      document.getElementById('perc').innerText = Math.round(num / den * 10000) / 100;
-      document.getElementById('grade').innerText = getGrade((num / den));
+      setGrade(num, den);
     }
   }
   gradeobjxhr.send();
 }
 
-function calcWeighted() {
-  var num = Number(localStorage.getItem('num'));
-  var den = Number(localStorage.getItem('den'));
+function insertRows(obj, value) {
+  if (obj.IsBonus === false) {
+    document.querySelector('#whatIf tbody').insertAdjacentHTML('beforeend', "<tr> <td>" + obj.Name + "</td> <td class='value'>" + value + " / " + obj.MaxPoints + "</td> </tr>");
+  } else {
+    document.querySelector('#whatIf tbody').insertAdjacentHTML('beforeend', "<tr> <td>" + obj.Name + "</td> <td class='value extra'>" + value + " / " + obj.MaxPoints + "</td> </tr>");
+  }
+}
+
+function calcWeighted(num, den) {
   document.querySelectorAll('.newGrade').forEach(function (input) {
     if (!input.parentNode.classList.contains('extra') && input.value != "") {
       den += Number(input.getAttribute('data-weight'));
@@ -139,29 +127,30 @@ function calcWeighted() {
       num += (Number(input.value) / Number(input.parentNode.innerText.split('/')[1]) * Number(input.getAttribute('data-weight')));
     }
   });
-  document.getElementById('num').innerHTML = Math.round(num * 100) / 100;
-  document.getElementById('den').innerHTML = Math.round(den * 100) / 100;
-  document.getElementById('perc').innerText = Math.round(num / den * 100);
-  document.getElementById('grade').innerText = getGrade((num / den));
+  setGrade(num, den);
 }
 
 function updateGrade() {
+  var num = Number(localStorage.getItem('num'));
+  var den = Number(localStorage.getItem('den'));
   if (document.getElementById('whatIf').classList.contains('weighted')) {
-    calcWeighted();
+    calcWeighted(num, den);
   } else {
-    var num = Number(localStorage.getItem('num'));
-    var den = Number(localStorage.getItem('den'));
     document.querySelectorAll('.newGrade').forEach(function (value) {
       if (!value.parentNode.classList.contains('extra') && value.value != "") {
         den += Number(value.parentNode.innerText.split('/')[1]);
       }
       num += Number(value.value);
     });
-    document.getElementById('num').innerHTML = Math.round(num * 100) / 100;
-    document.getElementById('den').innerHTML = Math.round(den * 100) / 100;
-    document.getElementById('perc').innerText = Math.round(num / den * 10000) / 100;
-    document.getElementById('grade').innerText = getGrade((num / den));
+    setGrade(num, den);
   }
+}
+
+function setGrade(num, den) {
+  document.getElementById('num').innerHTML = Math.round(num * 10) / 10;
+  document.getElementById('den').innerHTML = Math.round(den * 10) / 10;
+  document.getElementById('perc').innerText = Math.round(num / den * 1000) / 10;
+  document.getElementById('grade').innerText = getGrade((num / den));
 }
 
 function getGrade(perc) {
@@ -191,5 +180,7 @@ function getGrade(perc) {
 }
 
 function closeWhatIf() {
-  document.getElementById('whatIf').style = "display:none";
+  document.getElementById('overlay').classList.toggle("hidden");
+  document.getElementById('overlay').classList.toggle("visible");
+  document.querySelector('body').classList.toggle('disabled');
 }
