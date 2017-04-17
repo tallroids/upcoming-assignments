@@ -35,7 +35,7 @@ if (top.location.pathname.split('/')[4] == 'my_grades') {
   xhr.onload = function () {
     if (xhr.status == 200) {
       upcoming = xhr.response;
-      document.querySelectorAll('.d2l-homepage .d2l-box')[0].insertAdjacentHTML('afterbegin', upcoming);
+      document.querySelectorAll('.d2l-homepage .d2l-box:nth-child(1)').insertAdjacentHTML('afterbegin', upcoming);
     }
 
   }
