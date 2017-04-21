@@ -1,10 +1,5 @@
 /*eslint-env browser*/
 var classes;
-var courses = document.querySelectorAll('[title="Collapse My Courses"]')[1].parentElement.parentElement.parentElement.parentElement;
-courses.parentElement.removeChild(courses)
-
-var calendar = document.querySelectorAll('[title="Actions for Calendar"]')[0].parentElement.parentElement.parentElement
-calendar.parentElement.removeChild(calendar)
 
 var ou = top.location.pathname.split('/')[3];
 var currDate = new Date();
