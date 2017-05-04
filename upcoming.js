@@ -10,17 +10,6 @@ endDate.setDate(endDate.getDate() + 120);
 var itemsStartDate = new Date(currDate);
 itemsStartDate.setDate(itemsStartDate.getDate() - 7);
 
-var test = new XMLHttpRequest();
-test.open("GET", "/d2l/api/eP/2.5/newsfeed/");
-test.onload = function () {
-  if (test.status == 200) {
-    var testr = JSON.parse(test.response);
-    console.log(testr);
-  }
-}
-test.send();
-
-
 if (typeof (ou) != 'undefined') {
   if (ou != "6606") {
     var cclass = [{
@@ -64,12 +53,22 @@ function getItems(classes) {
       items.Objects.forEach(function (item) {
         var itemClass = "";
         if (item.DueDate === null) {
-          item.DueDate = item.EndDate;
+          if (item.EndDate === null) {
+            item.DueDate = item.StartDate;
+            item.IsAvailability = true;
+            itemClass = "available"
+          } else {
+            item.DueDate = item.EndDate;
+          }
         }
         if (Date.parse(item.DueDate) - currDate < 0) {
-          itemClass = "late";
+          if (item.IsAvailability) {
+            itemClass = "hidden";
+          } else {
+            itemClass = "late";
+          }
         }
-        var itemRow = "<tr><th><a href=" + item.ItemUrl + " title='" + item.ItemName + "'>" + item.ItemName + "</a></th>" + getCourse(item.OrgUnitId, classes) + "<td class=" + itemClass + ">" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td></tr>";
+        var itemRow = "<tr class=" + itemClass + "><th><a href=" + item.ItemUrl + " title='" + item.ItemName + "'>" + item.ItemName + "</a></th>" + getCourse(item.OrgUnitId, classes) + "<td>" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td></tr>";
         document.getElementById('upcomingTbody').insertAdjacentHTML('beforeend', itemRow)
       });
       document.getElementById('upcoming').insertAdjacentHTML('beforeend', "<p>*Assignments more that one week overdue are ommited. Quizzes with unlimited attempts will not disappear after completion</p>")
