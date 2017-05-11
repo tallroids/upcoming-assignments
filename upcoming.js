@@ -9,6 +9,9 @@ var endDate = new Date(currDate);
 endDate.setDate(endDate.getDate() + 120);
 var itemsStartDate = new Date(currDate);
 itemsStartDate.setDate(itemsStartDate.getDate() - 7);
+var daysToShow = 7;
+var itemsEndDate = new Date(currDate);
+itemsEndDate.setDate(itemsEndDate.getDate() + daysToShow);
 
 if (typeof (ou) != 'undefined') {
   if (ou != "6606") {
@@ -46,7 +49,7 @@ function getCourseIds(courses) {
 function getItems(classes) {
   var items;
   var itemsxhr = new XMLHttpRequest();
-  itemsxhr.open("GET", "/d2l/api/le/1.18/content/myItems/?completion=3&orgUnitIdsCSV=" + getCourseIds(classes) + "&startDateTime=" + itemsStartDate.toISOString());
+  itemsxhr.open("GET", "/d2l/api/le/1.18/content/myItems/?completion=3&orgUnitIdsCSV=" + getCourseIds(classes) + "&startDateTime=" + itemsStartDate.toISOString() + "&endDateTime=" + itemsEndDate.toISOString());
   itemsxhr.onload = function () {
     if (itemsxhr.status == 200) {
       items = JSON.parse(itemsxhr.response);
@@ -68,13 +71,71 @@ function getItems(classes) {
             itemClass = "late";
           }
         }
-        var itemRow = "<tr class=" + itemClass + "><th><a href=" + item.ItemUrl + " title='" + item.ItemName + "'>" + item.ItemName + "</a></th>" + getCourse(item.OrgUnitId, classes) + "<td>" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td></tr>";
+        var itemRow = "<tr class=" + itemClass + "><td><a href=" + item.ItemUrl + " title='" + item.ItemName + "'>" + item.ItemName + "</a></td>" + getCourse(item.OrgUnitId, classes) + "<td>" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td></tr>";
         document.getElementById('upcomingTbody').insertAdjacentHTML('beforeend', itemRow)
       });
       document.getElementById('upcoming').insertAdjacentHTML('beforeend', "<p>*Assignments more that one week overdue are ommited. Quizzes with unlimited attempts will not disappear after completion</p>")
     }
   }
   itemsxhr.send();
+}
+
+function isRecent(grade, d2l_grades) {
+  var courseId = grade.GradeObjectIdentifier;
+  var recent = true, exists = false;
+  d2l_grades.forEach(function (gradeObj) {
+    if (gradeObj.id == courseId) {
+      exists = true;
+      if(gradeObj.date - currDate.getTime() > 100*60*60*24){ 
+      recent = false;
+      }
+    }
+  });
+  if(!exists){
+    d2l_grades.push({
+      date: currDate.getTime(),
+      id: grade.GradeObjectIdentifier
+    });    
+  }
+  return recent;
+}
+
+var gradeValues = [];
+
+function evaluateGrades(gradeValues){
+  if (typeof (localStorage["d2l_grades"]) === 'undefined') {
+    localStorage['d2l_grades'] = "[]";
+  }
+  var d2l_grades = JSON.parse(localStorage['d2l_grades']);
+  var container = document.getElementById('gradesTbody');
+  gradeValues.forEach(function(course){
+    container.insertAdjacentHTML('beforeend', "<tr><th colspan='2'>" + course.name + "</th></tr>");
+    course.grades.forEach(function (grade) {
+      if (isRecent(grade, d2l_grades)) {
+        container.insertAdjacentHTML('beforeend', "<tr><td><a href='#'>" + grade.GradeObjectName + "</a></td><td>" + grade.DisplayedGrade + " | " + grade.PointsNumerator + "/" + grade.PointsDenominator + "</td></tr>");
+      }
+    });
+  })
+  localStorage["d2l_grades"] = JSON.stringify(d2l_grades);
+}
+
+function getGrades(courses) {
+  courses.forEach(function (course) {
+    var grades = new XMLHttpRequest();
+    grades.open("GET", "/d2l/api/le/1.15/" + course.Id + "/grades/values/myGradeValues/");
+    grades.onload = function () {
+      if (grades.status == 200) {
+        gradeValues.push({
+          name: course.Name,
+          grades: JSON.parse(grades.response).reverse()
+        })
+        if(gradeValues.length == courses.length){
+          evaluateGrades(gradeValues);
+        }
+      }
+    }
+    grades.send();
+  })
 }
 
 function getEnrollments() {
@@ -93,6 +154,7 @@ function getEnrollments() {
         }
       });
       getItems(filtered);
+      getGrades(filtered);
 
     }
   }

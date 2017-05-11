@@ -24,15 +24,18 @@
   }
   
   #upcomingTbody {
-    max-height: 450px;
+    max-height: 250px;
     overflow-y: auto;
     display: block;
     width: 100%;
   }
   
-  #upcoming th {
+  #upcoming td{
     text-align: left;
-    width: calc(40% - 20px);
+    width: calc(35% - 20px);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   
   #upcoming tr {
@@ -41,14 +44,13 @@
     border-bottom: 1px solid #eaeaea;
   }
   
-  #upcoming th,
   #upcoming td {
     display: inline-block;
     padding: 3px 10px;
     font-size: 1.1em;
   }
   
-  #upcoming td {
+  #upcoming td:last-child{
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;

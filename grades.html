@@ -1,0 +1,65 @@
+<style>
+  #grades {
+    box-shadow: 0px 2px 2px 0px #e7e7e2;
+    border-radius: 3px;
+    background: #fff;
+  }
+  
+  #grades .myHeading {
+    background: #326ba9;
+    border-radius: 3px 3px 0 0;
+    margin: 0;
+    line-height: initial;
+    font-weight: inherit;
+    color: #fff;
+  }
+
+  #gradesTable {
+    table-layout: fixed;
+    width: 100%;
+  }
+  
+  #gradesTbody {
+    max-height: 265px;
+    overflow-y: auto;
+    display: block;
+    width: 100%;
+  }
+  
+  #grades tr {
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid #eaeaea;
+  }  
+  #grades th {
+    padding: 3px 10px;
+    font-size: 1.1em;
+  }
+  
+  #grades td,
+  #grades td {
+    display: inline-block;
+    padding: 3px 10px;
+    font-size: 1.1em;
+  }
+  
+  #grades td:first-child{
+    width: calc(65% - 20px);
+    
+  }
+  
+  #grades td {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: calc(35% - 20px);
+  }
+</style>
+<div id="grades" class="d2l-widget d2l-htmlblock">
+  <h2 class="vui-heading-2 myHeading d2l-heading d2l-widget-header">
+    Recent Grades
+  </h2>
+  <table id="gradesTable">
+    <tbody id="gradesTbody"></tbody>
+  </table>
+</div>
