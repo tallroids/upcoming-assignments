@@ -46,6 +46,26 @@ function getCourseIds(courses) {
   return string;
 }
 
+function getGradeById(id){
+  var returnString;
+  var finalGrade = new XMLHttpRequest();
+  finalGrade.open("GET", "/d2l/api/le/1.18/" + id + "/grades/final/values/myGradeValue", false);
+  finalGrade.onload = function() {
+    if(finalGrade.status == 200){
+      var response = JSON.parse(finalGrade.response);    
+      var gradePerc;
+      if(response.WeightedDenominator == null){
+        gradePerc = Math.round(response.PointsNumerator/response.PointsDenominator * 100)
+      } else {
+        gradePerc = Math.round(response.WeightedNumerator/response.WeightedDenominator * 100)
+      }
+      returnString = "" + response.DisplayedGrade + " | " + gradePerc + "%";
+      return returnString;
+    }
+  }
+  finalGrade.send();
+}
+
 function getItems(classes) {
   var items;
   var itemsxhr = new XMLHttpRequest();
@@ -109,7 +129,26 @@ function evaluateGrades(gradeValues){
   var d2l_grades = JSON.parse(localStorage['d2l_grades']);
   var container = document.getElementById('gradesTbody');
   gradeValues.forEach(function(course){
-    container.insertAdjacentHTML('beforeend', "<tr><th colspan='2'>" + course.name + "</th></tr>");
+  
+    var returnString;
+    var finalGrade = new XMLHttpRequest();
+    finalGrade.open("GET", "/d2l/api/le/1.18/" + course.Id + "/grades/final/values/myGradeValue", false);
+    finalGrade.onload = function() {
+      if(finalGrade.status == 200){
+        var response = JSON.parse(finalGrade.response);    
+        var gradePerc;
+        if(response.WeightedDenominator == null){
+          gradePerc = Math.round(response.PointsNumerator/response.PointsDenominator * 100)
+        } else {
+          gradePerc = Math.round(response.WeightedNumerator/response.WeightedDenominator * 100)
+        }
+        returnString = "" + response.DisplayedGrade + " | " + gradePerc + "%";
+        return returnString;
+      }
+    }
+    finalGrade.send();
+    
+    container.insertAdjacentHTML('beforeend', "<tr><th><a href='/d2l/lms/grades/my_grades/main.d2l?ou=" + course.Id + "'>" + course.name + "</a></th><th>" + returnString + "</th></tr>");
     course.grades.forEach(function (grade) {
       if (isRecent(grade, d2l_grades)) {
         container.insertAdjacentHTML('beforeend', "<tr><td><a href='#'>" + grade.GradeObjectName + "</a></td><td>" + grade.DisplayedGrade + " | " + grade.PointsNumerator + "/" + grade.PointsDenominator + "</td></tr>");
@@ -127,6 +166,7 @@ function getGrades(courses) {
       if (grades.status == 200) {
         gradeValues.push({
           name: course.Name,
+          Id: course.Id,
           grades: JSON.parse(grades.response).reverse()
         })
         if(gradeValues.length == courses.length){

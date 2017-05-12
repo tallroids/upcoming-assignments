@@ -31,9 +31,22 @@
     width: 100%;
     border-bottom: 1px solid #eaeaea;
   }  
+  
   #grades th {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
     padding: 3px 10px;
     font-size: 1.1em;
+    background: #eee;
+    width: calc(65% - 20px);
+    border: solid #999;
+    border-width: 1px 0 0 0 ;
+  }
+  
+  #grades th:last-child{
+    width: calc(35% - 20px);
   }
   
   #grades td,
