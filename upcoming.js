@@ -49,7 +49,7 @@ function getCourseIds(courses) {
 function getGradeById(id){
   var returnString;
   var finalGrade = new XMLHttpRequest();
-  finalGrade.open("GET", "/d2l/api/le/1.18/" + id + "/grades/final/values/myGradeValue", false);
+  finalGrade.open("GET", "/d2l/api/le/1.18/" + id + "/grades/final/values/myGradeValue");
   finalGrade.onload = function() {
     if(finalGrade.status == 200){
       var response = JSON.parse(finalGrade.response);    
@@ -151,7 +151,7 @@ function evaluateGrades(gradeValues){
     container.insertAdjacentHTML('beforeend', "<tr><th><a href='/d2l/lms/grades/my_grades/main.d2l?ou=" + course.Id + "'>" + course.name + "</a></th><th>" + returnString + "</th></tr>");
     course.grades.forEach(function (grade) {
       if (isRecent(grade, d2l_grades)) {
-        container.insertAdjacentHTML('beforeend', "<tr><td><a href='#'>" + grade.GradeObjectName + "</a></td><td>" + grade.DisplayedGrade + " | " + grade.PointsNumerator + "/" + grade.PointsDenominator + "</td></tr>");
+        container.insertAdjacentHTML('beforeend', "<tr><td><a href='/d2l/lms/grades/my_grades/main.d2l?ou=" + course.Id + "'>" + grade.GradeObjectName + "</a></td><td>" + grade.DisplayedGrade + " | " + grade.PointsNumerator + "/" + grade.PointsDenominator + "</td></tr>");
       }
     });
   })
