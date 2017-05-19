@@ -46,26 +46,6 @@ function getCourseIds(courses) {
   return string;
 }
 
-function getGradeById(id){
-  var returnString;
-  var finalGrade = new XMLHttpRequest();
-  finalGrade.open("GET", "/d2l/api/le/1.18/" + id + "/grades/final/values/myGradeValue");
-  finalGrade.onload = function() {
-    if(finalGrade.status == 200){
-      var response = JSON.parse(finalGrade.response);    
-      var gradePerc;
-      if(response.WeightedDenominator == null){
-        gradePerc = Math.round(response.PointsNumerator/response.PointsDenominator * 100)
-      } else {
-        gradePerc = Math.round(response.WeightedNumerator/response.WeightedDenominator * 100)
-      }
-      returnString = "" + response.DisplayedGrade + " | " + gradePerc + "%";
-      return returnString;
-    }
-  }
-  finalGrade.send();
-}
-
 function getItems(classes) {
   var items;
   var itemsxhr = new XMLHttpRequest();
@@ -75,6 +55,7 @@ function getItems(classes) {
       items = JSON.parse(itemsxhr.response);
       items.Objects.forEach(function (item) {
         var itemClass = "";
+        console.log(item)
         if (item.DueDate === null) {
           if (item.EndDate === null) {
             item.DueDate = item.StartDate;
@@ -91,7 +72,7 @@ function getItems(classes) {
             itemClass = "late";
           }
         }
-        var itemRow = "<tr class=" + itemClass + "><td><a href=" + item.ItemUrl + " title='" + item.ItemName + "'>" + item.ItemName + "</a></td>" + getCourse(item.OrgUnitId, classes) + "<td>" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td></tr>";
+        var itemRow = "<tr class=" + itemClass + "><td><a href=" + item.ItemUrl + " title='" + item.ItemName + "' target='_blank'>" + item.ItemName + "</a></td>" + getCourse(item.OrgUnitId, classes) + "<td>" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td></tr>";
         document.getElementById('upcomingTbody').insertAdjacentHTML('beforeend', itemRow)
       });
       document.getElementById('upcoming').insertAdjacentHTML('beforeend', "<p>*Assignments more that one week overdue are ommited. Quizzes with unlimited attempts will not disappear after completion</p>")
@@ -106,9 +87,8 @@ function isRecent(grade, d2l_grades) {
   d2l_grades.forEach(function (gradeObj) {
     if (gradeObj.id == courseId) {
       exists = true;
-      if(gradeObj.date - currDate.getTime() > 100*60*60*24){ 
-      recent = false;
-      }
+      var age = currDate - gradeObj.date;
+      recent = !(age > (100*60*60*24*2));
     }
   });
   if(!exists){
