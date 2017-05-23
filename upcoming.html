@@ -6,11 +6,13 @@
   }
   
   #upcoming .myHeading {
+    display: flex;
     background: #326ba9;
     border-radius: 3px 3px 0 0;
     margin: 0;
     line-height: initial;
     font-weight: inherit;
+    color: #fff;
   }
   
   #upcoming .myHeading a {
@@ -28,9 +30,10 @@
     overflow-y: auto;
     display: block;
     width: 100%;
+    padding: 3px 0;
   }
   
-  #upcoming td{
+  #upcoming td {
     text-align: left;
     width: calc(35% - 20px);
     white-space: nowrap;
@@ -39,29 +42,21 @@
   }
   
   #upcoming tr {
-    display: block;
+    display: flex;
     width: 100%;
     border-bottom: 1px solid #eaeaea;
   }
   
   #upcoming td {
     display: inline-block;
-    padding: 3px 10px;
+    padding: 4px 10px 4px;
     font-size: 1.1em;
   }
   
-  #upcoming td:last-child{
+  #upcoming td:last-child {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    width: calc(30% - 20px);
-  }
-  
-  #upcoming.singleCourse th {
-    width: calc(70% - 20px);
-  }
-  
-  #upcoming.singleCourse td {
     width: calc(30% - 20px);
   }
   
@@ -72,24 +67,60 @@
     color: #888;
   }
   
-  .late {
-    color: #aa0000;
-  }
-  
   .available {
     color: #227700;
   }
   
-  #upcoming tr.hidden {
+  #upcoming .hidden,
+  #upcoming .oldAvailability {
     display: none;
+  }
+  
+  #toolbar {
+    flex-grow: 1;
+    text-align: right;
+    position: relative;
+    top: -1px;
+  }
+  
+  #upcoming a.tools {
+    padding: 0 2.5px;
+    font-size: .7em;
+    vertical-align: middle;
+  }
+  
+  #upcoming td.checkCont {
+    display: inline-block;
+    width: initial;
+    padding: 0;
+    position: relative;
+  }
+  
+  #upcoming input {
+    margin: 5px 0 3px 3px;
+  }
+  
+  #upcoming input:hover,
+  #upcoming label:hover {
+    cursor: pointer;
+  }
+  
+  #upcoming .urgent {
+    background-color: #fff3ca;
+  }
+  
+  #upcoming .late {
+    background-color: #ffd8d8;
+    color: #aa0000;
   }
 
 </style>
 <div id="upcoming" class="d2l-widget d2l-htmlblock">
   <h2 class="vui-heading-2 myHeading d2l-heading d2l-widget-header">
-    <a href="https://byui.brightspace.com/d2l/le/calendar/6606">Upcoming Assignments</a>
+    <a href="https://byui.brightspace.com/d2l/le/calendar/6606" title='View Calendar'>Upcoming Assignments</a><span id="toolbar"><a class="tools" onclick="hideRows()" href="#" title="Hide Selected Rows">Hide</a> | <a class="tools" onclick="showRows()" href="#" title="Show Hidden Rows">Show Hidden</a></span>
   </h2>
   <table id="upcomingTable">
-    <tbody id="upcomingTbody"></tbody>
+    <tbody id="upcomingTbody">
+    </tbody>
   </table>
 </div>
