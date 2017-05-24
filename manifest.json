@@ -10,7 +10,8 @@
     "128": "icon-128.png"
   },
   "browser_action": {
-    "default_icon": "icon-32.png"
+    "default_icon": "icon-32.png",
+    "default_popup": "options.html"
   },
   "content_scripts": [{
     "js": ["whatIf.js"],
@@ -18,7 +19,7 @@
                "https://pathway.brightspace.com/d2l/lms/grades/my_grades/*",
                "https://byui.brightspace.com/d2l/home*"]
   }],
-  "web_accessible_resources": ["scripts.js", "window.html", "upcoming.html", "upcoming.js", "grades.html"],
+  "web_accessible_resources": ["scripts.js", "window.html", "upcoming.html", "upcoming.js", "grades.html", "options.css", "options.css"],
   "background": {
     "scripts": ["background.js"]
   },
