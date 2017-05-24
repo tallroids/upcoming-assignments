@@ -232,3 +232,9 @@ function showRows() {
     }
   });
 }
+
+if (document.querySelectorAll('.row.no-gutter:not([style])').length < 3) {
+  document.querySelector('.d2l-box.d2l-box-h iframe').height = '300px';
+  document.querySelector('.d2l-box.d2l-box-h iframe').height = '300px';
+  document.querySelector('.d2l-box.d2l-box-h iframe').height = '300px';
+}
