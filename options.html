@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Toolbar</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="options.css">
+</head>
+
+<body>
+  <div class="item">
+    <span>Days to load for Upcoming Assignments</span>
+    <input class= "number" type="number" id="days">
+  </div>
+  <hr>
+  <div class="item">
+    <span>Remove Existing Widgets</span>
+    <label class="switch" for="htmltoggle">
+      <input type="checkbox" id="htmltoggle" class="tool">
+      <div class="slider round"></div>
+    </label>
+  </div>
+  <hr>
+  <div class="item">
+    <span>Upcoming Assignments on course pages</span>
+    <label class="switch" for="showOnCourse">
+        <input type="checkbox" id="showOnCourse" class="tool">
+        <div class="slider round"></div>
+      </label>
+  </div>
+  <hr>
+  <div class="item">
+    <span>Show Recent Grades Widget</span>
+    <label class="switch" for="showGrades">
+      <input type="checkbox" id="showGrades" class="tool">
+      <div class="slider round"></div>
+    </label>
+  </div>
+  <hr>
+  <div class="item">
+    <span>Increase spacing</span>
+    <label class="switch" for="moreSpacing">
+      <input type="checkbox" id="moreSpacing" class="tool">
+      <div class="slider round"></div>
+    </label>
+  </div>
+  <hr>
+  <div class="note">
+    <span><a href="about.html">About the tools</a></span>
+  </div>
+
+  <div id="status" style="color:red;text-align:center;font-size:8px;"></div>
+  <script src="background.js"></script>
+</body>
+
+</html>
