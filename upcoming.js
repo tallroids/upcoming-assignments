@@ -9,7 +9,10 @@ var endDate = new Date(currDate);
 endDate.setDate(endDate.getDate() + 120);
 var itemsStartDate = new Date(currDate);
 itemsStartDate.setDate(itemsStartDate.getDate() - 7);
-var daysToShow = 7;
+
+var daysToShow = 7,
+  moreSpacing;
+
 var itemsEndDate = new Date(currDate);
 itemsEndDate.setDate(itemsEndDate.getDate() + daysToShow);
 
@@ -59,7 +62,7 @@ function getItems(classes) {
     if (itemsxhr.status == 200) {
       items = JSON.parse(itemsxhr.response);
       items.Objects.forEach(function (item) {
-        if (d2l_assignments[item.ItemId] === null) {
+        if (typeof (d2l_assignments[item.ItemId]) === "undefined") {
           d2l_assignments[item.ItemId] = {
             id: item.ItemId,
             isHidden: false
@@ -81,6 +84,14 @@ function getItems(classes) {
             item.DueDate = item.EndDate;
           }
         }
+
+        /* Check if the item is due today */
+        if (Date.parse(item.DueDate) - currDate < 1000 * 60 * 60 * 24) {
+          if (!item.IsAvailability) {
+            itemClass = "urgent";
+          }
+        }
+
         /* Check if item is an availability notice and hide it if it has passed */
         if (Date.parse(item.DueDate) - currDate < 0) {
           if (item.IsAvailability) {
@@ -89,6 +100,7 @@ function getItems(classes) {
             itemClass = "late";
           }
         }
+
         if (typeof (d2l_assignments[item.ItemId]) != 'undefined') {
           if (d2l_assignments[item.ItemId].isHidden === true) {
             itemClass += " hidden";

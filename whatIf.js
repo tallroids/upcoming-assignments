@@ -1,6 +1,62 @@
 /*eslint-env browser*/
 /*global chrome*/
 var script;
+
+function executeOptions(removeWidgets, showGrades, showOnCourse) {
+
+  if (typeof top.location.pathname.split('/')[3] === 'undefined') {
+    if (removeWidgets) {
+
+      /* Delete redundant modules if you choose */
+      var courses = document.querySelectorAll('[title="Collapse My Courses"]')[1].parentElement.parentElement.parentElement.parentElement;
+      courses.parentElement.removeChild(courses)
+
+      var calendar = document.querySelectorAll('[title="Actions for Calendar"]')[0].parentElement.parentElement.parentElement
+      calendar.parentElement.removeChild(calendar)
+
+    }
+
+    /* Add Upcoming Assignments Widget */
+    var upXhr = new XMLHttpRequest();
+    upXhr.open("GET", chrome.extension.getURL('upcoming.html'));
+    upXhr.onload = function () {
+      if (upXhr.status == 200) {
+        var upcoming = upXhr.response;
+        document.querySelector('.d2l-homepage .d2l-box:nth-child(1)').insertAdjacentHTML('afterbegin', upcoming);
+      }
+    }
+    upXhr.send();
+
+    if (showGrades) {
+      /* Add Recent Grades Widget */
+      var gradesXhr = new XMLHttpRequest();
+      gradesXhr.open("GET", chrome.extension.getURL('grades.html'));
+      gradesXhr.onload = function (e) {
+        if (gradesXhr.status == 200) {
+          var grades = gradesXhr.response;
+          document.querySelector('.d2l-homepage .d2l-box:nth-child(2)').insertAdjacentHTML('afterbegin', grades);
+        } else {
+          console.log(e);
+        }
+      }
+      gradesXhr.send();
+    }
+  }
+
+  if (showOnCourse) {
+    /* Add Upcoming Assignments Widget */
+    var upXhr = new XMLHttpRequest();
+    upXhr.open("GET", chrome.extension.getURL('upcoming.html'));
+    upXhr.onload = function () {
+      if (upXhr.status == 200) {
+        var upcoming = upXhr.response;
+        document.querySelector('.d2l-homepage .d2l-box:nth-child(1)').insertAdjacentHTML('afterbegin', upcoming);
+      }
+    }
+    upXhr.send();
+  }
+}
+
 if (top.location.pathname.split('/')[4] == 'my_grades') {
 
   document.querySelector('form').style = "position: relative";
@@ -28,39 +84,27 @@ if (top.location.pathname.split('/')[4] == 'my_grades') {
 
 } else if (top.location.pathname.split('/')[2] == 'home') {
 
-  if (typeof top.location.pathname.split('/')[3] === 'undefined') {
-    /* Delete redundant modules if you choose */
-    var courses = document.querySelectorAll('[title="Collapse My Courses"]')[1].parentElement.parentElement.parentElement.parentElement;
-    courses.parentElement.removeChild(courses)
+  var removeWidgets, showOnCourse, showGrades;
+  chrome.storage.sync.get({
+    removeWidgets: true,
+    showOnCourse: true,
+    showGrades: true
+  }, function (items) {
+    removeWidgets = items.removeWidgets;
+    showOnCourse = items.showOnCourse;
+    showGrades = items.showGrades;
+    executeOptions(removeWidgets, showOnCourse, showGrades);
+  });
 
-    var calendar = document.querySelectorAll('[title="Actions for Calendar"]')[0].parentElement.parentElement.parentElement
-    calendar.parentElement.removeChild(calendar)
-  }
+  /*Insert jQuery*/
+  script = document.createElement('script');
+  script.src = chrome.extension.getURL('jquery-3.2.1.min.js');
+  script.onload = function () {
+    this.remove();
+  };
+  (document.head || document.documentElement).appendChild(script);
 
-  /* Add Upcoming Assignments Widget */
-  var upXhr = new XMLHttpRequest();
-  upXhr.open("GET", chrome.extension.getURL('upcoming.html'));
-  upXhr.onload = function () {
-    if (upXhr.status == 200) {
-      var upcoming = upXhr.response;
-      document.querySelector('.d2l-homepage .d2l-box:nth-child(1)').insertAdjacentHTML('afterbegin', upcoming);
-    }
-  }
-  upXhr.send();
-
-  /* Add Recent Grades Widget */
-  var gradesXhr = new XMLHttpRequest();
-  gradesXhr.open("GET", chrome.extension.getURL('grades.html'));
-  gradesXhr.onload = function (e) {
-    if (gradesXhr.status == 200) {
-      var grades = gradesXhr.response;
-      document.querySelector('.d2l-homepage .d2l-box:nth-child(2)').insertAdjacentHTML('afterbegin', grades);
-    } else {
-      console.log(e);
-    }
-  }
-  gradesXhr.send();
-
+  /*Insert Script*/
   script = document.createElement('script');
   script.src = chrome.extension.getURL('upcoming.js');
   script.onload = function () {

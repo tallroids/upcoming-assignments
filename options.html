@@ -10,13 +10,13 @@
 <body>
   <div class="item">
     <span>Days to load for Upcoming Assignments</span>
-    <input class= "number" type="number" id="days">
+    <input class="number" type="number" id="days" disabled>
   </div>
   <hr>
   <div class="item">
     <span>Remove Existing Widgets</span>
-    <label class="switch" for="htmltoggle">
-      <input type="checkbox" id="htmltoggle" class="tool">
+    <label class="switch" for="removeWidgets">
+      <input type="checkbox" id="removeWidgets" class="tool">
       <div class="slider round"></div>
     </label>
   </div>
@@ -40,7 +40,7 @@
   <div class="item">
     <span>Increase spacing</span>
     <label class="switch" for="moreSpacing">
-      <input type="checkbox" id="moreSpacing" class="tool">
+      <input type="checkbox" id="moreSpacing" class="tool" disabled>
       <div class="slider round"></div>
     </label>
   </div>
@@ -50,7 +50,8 @@
   </div>
 
   <div id="status" style="color:red;text-align:center;font-size:8px;"></div>
-  <script src="background.js"></script>
+  <script src="jquery-3.2.1.min.js"></script>
+  <script src="options.js"></script>
 </body>
 
 </html>

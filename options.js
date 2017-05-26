@@ -1,21 +1,14 @@
-/*Listen for whatif click*/
-chrome.browserAction.onClicked.addListener(function (tab) {
-  chrome.tabs.executeScript(tab.id, {
-    code: 'document.getElementById("whatIf").style = "";'
-  });
-});
-
 /*eslint-env browser, jquery*/
 // Saves options to chrome.storage
 function save_options() {
-  var days = document.querySelectorAll('days').value;
-  var htmltoggle = document.getElementById('htmltoggle').checked;
+  var days = document.getElementById('days').value;
+  var removeWidgets = document.getElementById('removeWidgets').checked;
   var showOnCourse = document.getElementById('showOnCourse').checked;
   var showGrades = document.getElementById('showGrades').checked;
   var moreSpacing = document.getElementById('moreSpacing').checked;
   chrome.storage.sync.set({
     days: days,
-    htmltoggle: htmltoggle,
+    removeWidgets: removeWidgets,
     showOnCourse: showOnCourse,
     showGrades: showGrades,
     moreSpacing: moreSpacing
@@ -28,13 +21,13 @@ function restore_options() {
 
   chrome.storage.sync.get({
     days: 7,
-    htmltoggle: false,
-    showOnCourse: false,
-    showGrades: false,
+    removeWidgets: true,
+    showOnCourse: true,
+    showGrades: true,
     moreSpacing: false
   }, function (items) {
     document.getElementById('days').value = items.days;
-    document.getElementById('htmltoggle').checked = items.htmltoggle;
+    document.getElementById('removeWidgets').checked = items.removeWidgets;
     document.getElementById('showOnCourse').checked = items.showOnCourse;
     document.getElementById('showGrades').checked = items.showGrades;
     document.getElementById('moreSpacing').checked = items.moreSpacing;
