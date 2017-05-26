@@ -2,7 +2,7 @@
 /*global chrome*/
 var script;
 
-function executeOptions(removeWidgets, showGrades, showOnCourse) {
+function executeOptions(removeWidgets, showOnCourse, showGrades) {
 
   if (typeof top.location.pathname.split('/')[3] === 'undefined') {
     if (removeWidgets) {
@@ -27,6 +27,14 @@ function executeOptions(removeWidgets, showGrades, showOnCourse) {
     }
     upXhr.send();
 
+    /*Insert Script*/
+    script = document.createElement('script');
+    script.src = chrome.extension.getURL('upcoming.js');
+    script.onload = function () {
+      this.remove();
+    };
+    (document.head || document.documentElement).appendChild(script);
+
     if (showGrades) {
       /* Add Recent Grades Widget */
       var gradesXhr = new XMLHttpRequest();
@@ -41,20 +49,31 @@ function executeOptions(removeWidgets, showGrades, showOnCourse) {
       }
       gradesXhr.send();
     }
+  } else {
+
+    if (showOnCourse) {
+      /* Add Upcoming Assignments Widget */
+      var upXhr = new XMLHttpRequest();
+      upXhr.open("GET", chrome.extension.getURL('upcoming.html'));
+      upXhr.onload = function () {
+        if (upXhr.status == 200) {
+          var upcoming = upXhr.response;
+          document.querySelector('.d2l-homepage .d2l-box:nth-child(1)').insertAdjacentHTML('afterbegin', upcoming);
+        }
+      }
+
+      upXhr.send();
+      /*Insert Script*/
+      script = document.createElement('script');
+      script.src = chrome.extension.getURL('upcoming.js');
+      script.onload = function () {
+        this.remove();
+      };
+      (document.head || document.documentElement).appendChild(script);
+    }
+
   }
 
-  if (showOnCourse) {
-    /* Add Upcoming Assignments Widget */
-    var upXhr = new XMLHttpRequest();
-    upXhr.open("GET", chrome.extension.getURL('upcoming.html'));
-    upXhr.onload = function () {
-      if (upXhr.status == 200) {
-        var upcoming = upXhr.response;
-        document.querySelector('.d2l-homepage .d2l-box:nth-child(1)').insertAdjacentHTML('afterbegin', upcoming);
-      }
-    }
-    upXhr.send();
-  }
 }
 
 if (top.location.pathname.split('/')[4] == 'my_grades') {
@@ -84,29 +103,26 @@ if (top.location.pathname.split('/')[4] == 'my_grades') {
 
 } else if (top.location.pathname.split('/')[2] == 'home') {
 
-  var removeWidgets, showOnCourse, showGrades;
+  var removeWidgets, showOnCourse, showGrades, moreSpacing;
   chrome.storage.sync.get({
+    days: 7,
+    moreSpacing: false,
     removeWidgets: true,
     showOnCourse: true,
     showGrades: true
   }, function (items) {
+    localStorage['d2l_daysToShow'] = JSON.stringify(items.days);
+    localStorage['d2l_moreSpacing'] = JSON.stringify(items.moreSpacing);
     removeWidgets = items.removeWidgets;
     showOnCourse = items.showOnCourse;
     showGrades = items.showGrades;
     executeOptions(removeWidgets, showOnCourse, showGrades);
   });
 
+
   /*Insert jQuery*/
   script = document.createElement('script');
   script.src = chrome.extension.getURL('jquery-3.2.1.min.js');
-  script.onload = function () {
-    this.remove();
-  };
-  (document.head || document.documentElement).appendChild(script);
-
-  /*Insert Script*/
-  script = document.createElement('script');
-  script.src = chrome.extension.getURL('upcoming.js');
   script.onload = function () {
     this.remove();
   };

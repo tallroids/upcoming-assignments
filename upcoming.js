@@ -10,12 +10,15 @@ endDate.setDate(endDate.getDate() + 120);
 var itemsStartDate = new Date(currDate);
 itemsStartDate.setDate(itemsStartDate.getDate() - 7);
 
-var daysToShow = 7,
-  moreSpacing;
+var daysToShow = Number(JSON.parse(localStorage['d2l_daysToShow'])),
+  moreSpacing = JSON.parse(localStorage['d2l_moreSpacing']);
+
+if (moreSpacing) {
+  console.log("more spacing")
+}
 
 var itemsEndDate = new Date(currDate);
 itemsEndDate.setDate(itemsEndDate.getDate() + daysToShow);
-
 if (typeof (ou) != 'undefined') {
   if (ou != "6606") {
     var cclass = [{
