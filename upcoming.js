@@ -110,7 +110,11 @@ function getItems(classes) {
             isHidden = "checked";
           }
         }
-        var itemRow = "<tr class='" + itemClass + "'><td class='checkCont'><label for='" + item.ItemId + "'><input type='checkbox' id='" + item.ItemId + "' class='checkBoxes' " + isHidden + " onchange='updateVisibility(this)'></label></td><td><a href=" + item.ItemUrl + " title='" + item.ItemName + "' target='_blank'>" + item.ItemName + "</a></td>" + getCourse(item.OrgUnitId, classes) + "<td>" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td></tr>";
+
+        if (JSON.parse(localStorage["d2l_moreSpacing"])) {
+          itemClass += ' moreSpacing';
+        }
+        var itemRow = "<tr class='" + itemClass + "'><td class='checkCont'><label for='" + item.ItemId + "'><input type='checkbox' id='" + item.ItemId + "' class='checkBoxes' " + isHidden + " onchange='updateVisibility(this)'></label></td><td><a href=" + item.ItemUrl + " title='" + item.ItemName + "' target='_blank'>" + item.ItemName + "</a></td>" + getCourse(item.OrgUnitId, classes) + "<td title='" + new Date(Date.parse(item.DueDate)).toLocaleString() + "'>" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td></tr>";
         document.getElementById('upcomingTbody').insertAdjacentHTML('beforeend', itemRow)
       });
       localStorage['d2l_assignments'] = JSON.stringify(d2l_assignments);

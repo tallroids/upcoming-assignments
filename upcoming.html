@@ -20,6 +20,10 @@
     font-size: .96em;
   }
   
+  #upcoming td a {
+    color: #326ba9;
+  }
+  
   #upcomingTable {
     table-layout: fixed;
     width: 100%;
@@ -30,7 +34,6 @@
     overflow-y: auto;
     display: block;
     width: 100%;
-    padding: 3px 0;
   }
   
   #upcoming td {
@@ -45,6 +48,10 @@
     display: flex;
     width: 100%;
     border-bottom: 1px solid #eaeaea;
+  }
+  
+  #upcoming tr.visible:first-of-type {
+    padding-top: 30px;
   }
   
   #upcoming td {
@@ -91,7 +98,7 @@
   
   #upcoming td.checkCont {
     display: inline-block;
-    width: initial;
+    width: 30px;
     padding: 0;
     position: relative;
   }
@@ -112,6 +119,39 @@
   #upcoming .late {
     background-color: #ffd8d8;
     color: #aa0000;
+  }
+  
+  #upcoming tr.moreSpacing {
+    padding: 5px 0;
+  }
+  
+  #upcoming .checkBoxes {
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 4px 0 0 10px;
+    background-color: #fafafa;
+    border: 1px solid #cacece;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+    padding: 7px;
+    border-radius: 3px;
+    display: inline-block;
+    position: relative;
+    transition: .3s;
+  }
+  
+  #upcoming .checkBoxes:checked {
+    background-color: #326ba9;
+    border: 1px solid #326ba9;
+    color: #fff;
+  }
+  
+  #upcoming .checkBoxes:checked:after {
+    content: '\2714';
+    font-size: 14px;
+    position: absolute;
+    top: -3px;
+    left: 1px;
+    color: #fff;
   }
 
 </style>
