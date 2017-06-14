@@ -10,12 +10,7 @@ endDate.setDate(endDate.getDate() + 120);
 var itemsStartDate = new Date(currDate);
 itemsStartDate.setDate(itemsStartDate.getDate() - 7);
 
-var daysToShow = Number(JSON.parse(localStorage['d2l_daysToShow'])),
-  moreSpacing = JSON.parse(localStorage['d2l_moreSpacing']);
-
-if (moreSpacing) {
-  console.log("more spacing")
-}
+var daysToShow = 7
 
 var itemsEndDate = new Date(currDate);
 itemsEndDate.setDate(itemsEndDate.getDate() + daysToShow);
@@ -111,9 +106,6 @@ function getItems(classes) {
           }
         }
 
-        if (JSON.parse(localStorage["d2l_moreSpacing"])) {
-          itemClass += ' moreSpacing';
-        }
         var itemRow = "<tr class='" + itemClass + "'><td class='checkCont'><label for='" + item.ItemId + "'><input type='checkbox' id='" + item.ItemId + "' class='checkBoxes' " + isHidden + " onchange='updateVisibility(this)'></label></td><td><a href=" + item.ItemUrl + " title='" + item.ItemName + "' target='_blank'>" + item.ItemName + "</a></td>" + getCourse(item.OrgUnitId, classes) + "<td title='" + new Date(Date.parse(item.DueDate)).toLocaleString() + "'>" + new Date(Date.parse(item.DueDate)).toLocaleString() + "</td></tr>";
         document.getElementById('upcomingTbody').insertAdjacentHTML('beforeend', itemRow)
       });

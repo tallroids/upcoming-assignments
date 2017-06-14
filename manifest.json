@@ -1,25 +1,21 @@
 {
   "manifest_version": 2,
-
-  "name": "I-Learn Tools",
-  "description": "View upcoming assignments widget to the I-Learn homescreen, and use a what-if calculator in the gradebook.",
-  "version": "1.2.0",
+  "name": "Upcoming Assigments",
+  "description": "Adds and upcoming assignments widget to the I-Learn homescreen.",
+  "version": "1.2.2",
   "icons": {
     "16": "icon-16.png",
     "32": "icon-32.png",
     "128": "icon-128.png"
   },
   "browser_action": {
-    "default_icon": "icon-32.png",
-    "default_popup": "options.html"
+    "default_icon": "icon-32.png"
   },
   "content_scripts": [{
-    "js": ["whatIf.js"],
-    "matches": ["https://byui.brightspace.com/d2l/lms/grades/my_grades/*",
-               "https://pathway.brightspace.com/d2l/lms/grades/my_grades/*",
-               "https://byui.brightspace.com/d2l/home*"]
+    "js": ["main.js"],
+    "matches": ["https://byui.brightspace.com/d2l/home*"]
   }],
-  "web_accessible_resources": ["scripts.js", "window.html", "upcoming.html", "upcoming.js", "grades.html", "options.css", "jquery-3.2.1.min.js"],
+  "web_accessible_resources": ["upcoming.html", "upcoming.js", "jquery-3.2.1.min.js"],
   "permissions": [
     "activeTab",
     "storage"
