@@ -110,7 +110,7 @@ function getItems(classes) {
         document.getElementById('upcomingTbody').insertAdjacentHTML('beforeend', itemRow)
       });
       localStorage['d2l_assignments'] = JSON.stringify(d2l_assignments);
-      document.getElementById('upcoming').insertAdjacentHTML('beforeend', "<p>*Assignments more that one week overdue are ommited. Quizzes with unlimited attempts will not disappear after completion</p>")
+      document.getElementById('upcoming').insertAdjacentHTML('beforeend', "<p>*Assignments more than one week overdue are ommited. Quizzes with unlimited attempts will not disappear after completion</p>")
     }
   }
   itemsxhr.send();
